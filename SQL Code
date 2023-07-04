@@ -1,7 +1,7 @@
 -- Create PlaceA table
 CREATE TABLE IF NOT EXISTS PlaceA (
   SerialNumber INT,
-  LastServiceDate DATE,
+  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
   NeedsParts ENUM('true', 'false', 'part ordered'),
@@ -12,21 +12,13 @@ CREATE TABLE IF NOT EXISTS PlaceA (
 -- Create PlaceB table
 CREATE TABLE IF NOT EXISTS PlaceB (
   SerialNumber INT,
-  LastServiceDate DATE,
+  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
   NeedsParts ENUM('true', 'false', 'part ordered'),
   PartName VARCHAR(255) DEFAULT NULL,
   PartsArrived ENUM('true', 'false', 'N/A')
 );
-
--- Modify PlaceA table to include "part ordered" option in NeedsParts
-ALTER TABLE PlaceA
-MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered');
-
--- Modify PlaceB table to include "part ordered" option in NeedsParts
-ALTER TABLE PlaceB
-MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered');
 
 -- Create Users table
 CREATE TABLE IF NOT EXISTS Users (
@@ -40,29 +32,3 @@ CREATE TABLE IF NOT EXISTS Users (
 -- Insert admin user record
 INSERT INTO Users (Username, Password, Email)
 VALUES ('admin', 'admin_password', 'admin@example.com');
-
--- Create trigger for PlaceA to update NeedsParts when PartsArrived becomes true
-DELIMITER //
-
-CREATE TRIGGER Update_NeedsParts_After_Update_A
-AFTER UPDATE ON PlaceA
-FOR EACH ROW
-BEGIN
-  IF NEW.PartsArrived = 'true' THEN
-    UPDATE PlaceA SET NeedsParts = 'false' WHERE SerialNumber = NEW.SerialNumber;
-  END IF;
-END;
-//
-
--- Create trigger for PlaceB to update NeedsParts when PartsArrived becomes true
-CREATE TRIGGER Update_NeedsParts_After_Update_B
-AFTER UPDATE ON PlaceB
-FOR EACH ROW
-BEGIN
-  IF NEW.PartsArrived = 'true' THEN
-    UPDATE PlaceB SET NeedsParts = 'false' WHERE SerialNumber = NEW.SerialNumber;
-  END IF;
-END;
-//
-
-DELIMITER ;
