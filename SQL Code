@@ -26,4 +26,13 @@ MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered');
 
 -- Modify PlaceB table to include "part ordered" option in NeedsParts
 ALTER TABLE PlaceB
-MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered')
+MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered');
+
+-- Create Users table
+CREATE TABLE IF NOT EXISTS Users (
+  UserID INT PRIMARY KEY AUTO_INCREMENT,
+  Username VARCHAR(255) UNIQUE,
+  Password VARCHAR(255),
+  Email VARCHAR(255),
+  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
