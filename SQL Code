@@ -20,6 +20,19 @@ CREATE TABLE IF NOT EXISTS PlaceB (
   PartsArrived ENUM('true', 'false', 'N/A')
 );
 
+-- Create PlaceDetails table
+CREATE TABLE IF NOT EXISTS PlaceDetails (
+  PlaceName VARCHAR(255),
+  Location VARCHAR(255),
+  PhoneNumber VARCHAR(20)
+);
+
+-- Insert sample rows into PlaceDetails table
+INSERT INTO PlaceDetails (PlaceName, Location, PhoneNumber)
+VALUES
+  ('Place A', 'Location A', '123-456-7890'),
+  ('Place B', 'Location B', '987-654-3210');
+
 -- Create Users table
 CREATE TABLE IF NOT EXISTS Users (
   UserID INT PRIMARY KEY AUTO_INCREMENT,
