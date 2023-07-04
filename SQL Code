@@ -1,0 +1,43 @@
+-- Drop the existing tables (only if needed)
+DROP TABLE IF EXISTS PlaceA;
+DROP TABLE IF EXISTS PlaceB;
+
+CREATE TABLE PlaceA (
+  SerialNumber INT,
+  LastServiceDate DATE,
+  LastServiceDone VARCHAR(255),
+  NextPNMDate DATE,
+  NeedsParts BOOLEAN,
+  PartName VARCHAR(255) DEFAULT NULL,
+  PartsArrived BOOLEAN
+);
+
+CREATE TABLE PlaceB (
+  SerialNumber INT,
+  LastServiceDate DATE,
+  LastServiceDone VARCHAR(255),
+  NextPNMDate DATE,
+  NeedsParts BOOLEAN,
+  PartName VARCHAR(255) DEFAULT NULL,
+  PartsArrived BOOLEAN
+);
+
+-- Insert blank rows into PlaceA table
+INSERT INTO PlaceA (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartsArrived)
+VALUES
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- Insert blank rows into PlaceB table
+INSERT INTO PlaceB (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartsArrived)
+VALUES
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL),
+  (NULL, NULL, NULL, NULL, NULL, NULL);
