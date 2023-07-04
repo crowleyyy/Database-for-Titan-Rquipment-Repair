@@ -1,43 +1,29 @@
--- Drop the existing tables (only if needed)
-DROP TABLE IF EXISTS PlaceA;
-DROP TABLE IF EXISTS PlaceB;
-
-CREATE TABLE PlaceA (
+-- Create PlaceA table
+CREATE TABLE IF NOT EXISTS PlaceA (
   SerialNumber INT,
   LastServiceDate DATE,
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
-  NeedsParts BOOLEAN,
+  NeedsParts ENUM('true', 'false', 'part ordered'),
   PartName VARCHAR(255) DEFAULT NULL,
-  PartsArrived BOOLEAN
+  PartsArrived ENUM('true', 'false', 'N/A')
 );
 
-CREATE TABLE PlaceB (
+-- Create PlaceB table
+CREATE TABLE IF NOT EXISTS PlaceB (
   SerialNumber INT,
   LastServiceDate DATE,
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
-  NeedsParts BOOLEAN,
+  NeedsParts ENUM('true', 'false', 'part ordered'),
   PartName VARCHAR(255) DEFAULT NULL,
-  PartsArrived BOOLEAN
+  PartsArrived ENUM('true', 'false', 'N/A')
 );
 
--- Insert blank rows into PlaceA table
-INSERT INTO PlaceA (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartsArrived)
-VALUES
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL);
+-- Modify PlaceA table to include "part ordered" option in NeedsParts
+ALTER TABLE PlaceA
+MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered');
 
--- Insert blank rows into PlaceB table
-INSERT INTO PlaceB (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartsArrived)
-VALUES
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL),
-  (NULL, NULL, NULL, NULL, NULL, NULL);
+-- Modify PlaceB table to include "part ordered" option in NeedsParts
+ALTER TABLE PlaceB
+MODIFY COLUMN NeedsParts ENUM('true', 'false', 'part ordered')
