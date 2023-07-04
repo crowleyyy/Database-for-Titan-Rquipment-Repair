@@ -1,59 +1,56 @@
-## Database For Titan Equipment Repair (Work in Progress)
+# Database For Titan Equipment Repair
 
-This repository contains the source code and documentation for a database designed for Titan Equipment Repair. The database manages various aspects of the company's operations, including authentication, PlaceA, and PlaceB information.
+Welcome to the Database For Titan Equipment Repair! This database is designed to manage information about forklift repairs and maintenance. It helps track forklifts, their service history, and the parts needed for repair.
 
-### Introduction
+## Database Structure
 
-The Database For Titan Equipment Repair is a comprehensive solution for managing the data of Titan Equipment Repair. It provides functionalities for user authentication and storing information about different places. This database aims to streamline the company's operations, enhance data management, and improve overall efficiency.
-
-Please note that this database is a work in progress, and additional tables and sections will be added to accommodate specific information.
+The database consists of the following tables:
 
 ### Authentication Table
 
-The `authentication` table stores user authentication information, allowing authorized access to the database. It includes the following columns:
+- `Users` table:
+  - `user_id` (Primary Key)
+  - `username`
+  - `password`
 
-- `id`: The unique identifier for each user.
-- `username`: The username associated with the user account.
-- `password`: The hashed password for secure authentication.
+### Place A Table
 
-### PlaceA Table
+- `PlaceA` table:
+  - `serial_number` (Primary Key)
+  - `last_service_date`
+  - `last_service_done`
+  - `next_service_date`
+  - `needs_parts` (ENUM: "True", "False", "Part ordered")
+  - `parts_name`
+  - `parts_arrived` (ENUM: "True", "False", "N/A")
 
-The `placeA` table stores information about PlaceA within Titan Equipment Repair. It includes the following columns:
+### Place B Table
 
-- `id`: The unique identifier for each entry.
-- `serial_number`: The serial number of the forklift at PlaceA.
-- `last_service_date`: The date of the last service performed on the forklift at PlaceA.
-- `last_service_done`: A description of the last service performed on the forklift at PlaceA.
-- `next_pm_date`: The next preventive maintenance date (oil change) for the forklift at PlaceA.
-- `needs_parts`: Indicates if the forklift at PlaceA needs parts. Possible values: "True", "False", "Part ordered" (ENUM).
-- `parts_name`: The name of the parts required for the forklift at PlaceA.
-- `parts_arrived`: Indicates if the required parts have arrived for the forklift at PlaceA. Possible values: "True", "False", "N/A" (ENUM).
+- `PlaceB` table:
+  - `serial_number` (Primary Key)
+  - `last_service_date`
+  - `last_service_done`
+  - `next_service_date`
+  - `needs_parts` (ENUM: "True", "False", "Part ordered")
+  - `parts_name`
+  - `parts_arrived` (ENUM: "True", "False", "N/A")
 
-### PlaceB Table
+### Place Details Table
 
-The `placeB` table stores information about PlaceB within Titan Equipment Repair. It includes the following columns:
+- `PlaceDetails` table:
+  - `name`
+  - `location`
+  - `phone_number`
 
-- `id`: The unique identifier for each entry.
-- `serial_number`: The serial number of the forklift at PlaceB.
-- `last_service_date`: The date of the last service performed on the forklift at PlaceB.
-- `last_service_done`: A description of the last service performed on the forklift at PlaceB.
-- `next_pm_date`: The next preventive maintenance date (oil change) for the forklift at PlaceB.
-- `needs_parts`: Indicates if the forklift at PlaceB needs parts. Possible values: "True", "False", "Part ordered" (ENUM).
-- `parts_name`: The name of the parts required for the forklift at PlaceB.
-- `parts_arrived`: Indicates if the required parts have arrived for the forklift at PlaceB. Possible values: "True", "False", "N/A" (ENUM).
+Please note that this database is a work in progress, and each table will have its own specific table and section.
 
-### Trigger for Updating Needs Parts
+## Contributing
 
-A trigger has been implemented in the database to automatically update the `needs_parts` column in both the PlaceA and PlaceB tables. When the `parts_arrived` column is set to "True", the trigger will change the value of `needs_parts` to "False". This ensures that the database maintains accurate information about the parts status for each forklift.
+Thank you for considering contributing to the Database For Titan Equipment Repair project! We welcome any contributions that help improve the database and enhance its functionalities. To ensure a smooth collaboration, please review the guidelines outlined in the [Contributing](CONTRIBUTING.md) file.
 
-### Additional Tables (Work in Progress)
+## License
 
-This database is under development, and additional tables will be added to handle specific information and functionality. Stay tuned for updates.
+The Database For Titan Equipment Repair is licensed under the [MIT License](LICENSE).
 
-### Contributing
+We appreciate your interest and contributions to this project. Together, we can make the database more comprehensive and useful!
 
-Contributions to the Database For Titan Equipment Repair project are welcome! If you have suggestions, bug reports, or would like to add new features, please follow the guidelines outlined in the [Contribution Guidelines](CONTRIBUTING.md).
-
-### License
-
-The Database For Titan Equipment Repair is licensed under the [MIT License](LICENSE). Feel free to modify and distribute the code as per the terms of the license.
