@@ -1,39 +1,32 @@
--- Create PlaceA table
-CREATE TABLE IF NOT EXISTS PlaceA (
+-- Create Equipment table
+CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT,
-  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
+  LastServiceDate DATE,
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
   NeedsParts ENUM('true', 'false', 'part ordered'),
   PartName VARCHAR(255) DEFAULT NULL,
-  PartsArrived ENUM('true', 'false', 'N/A')
+  PartsArrived ENUM('true', 'false', 'N/A'),
+  Place VARCHAR(255),
+  LocationID INT,
+  FOREIGN KEY (LocationID) REFERENCES Location(ID)
 );
 
--- Create PlaceB table
-CREATE TABLE IF NOT EXISTS PlaceB (
-  SerialNumber INT,
-  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
-  LastServiceDone VARCHAR(255),
-  NextPNMDate DATE,
-  NeedsParts ENUM('true', 'false', 'part ordered'),
-  PartName VARCHAR(255) DEFAULT NULL,
-  PartsArrived ENUM('true', 'false', 'N/A')
-);
-
--- Create PlaceDetails table
-CREATE TABLE IF NOT EXISTS PlaceDetails (
-  PlaceName VARCHAR(255),
-  Location VARCHAR(255),
+-- Create Location table (if not already created)
+CREATE TABLE IF NOT EXISTS Location (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Name VARCHAR(255),
+  Address VARCHAR(255),
   PhoneNumber VARCHAR(20)
 );
 
--- Insert sample rows into PlaceDetails table
-INSERT INTO PlaceDetails (PlaceName, Location, PhoneNumber)
+-- Insert sample records into Location table
+INSERT INTO Location (Name, Address, PhoneNumber)
 VALUES
-  ('Place A', 'Location A', '123-456-7890'),
-  ('Place B', 'Location B', '987-654-3210');
+  ('Place A', '123 Main Street, City A', '123-456-7890'),
+  ('Place B', '456 Elm Street, City B', '987-654-3210');
 
--- Create Users table
+-- Create Users table (if not already created)
 CREATE TABLE IF NOT EXISTS Users (
   UserID INT PRIMARY KEY AUTO_INCREMENT,
   Username VARCHAR(255) UNIQUE,
@@ -42,6 +35,6 @@ CREATE TABLE IF NOT EXISTS Users (
   CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert admin user record
+-- Insert admin user record (if not already inserted)
 INSERT INTO Users (Username, Password, Email)
 VALUES ('admin', 'admin_password', 'admin@example.com');
