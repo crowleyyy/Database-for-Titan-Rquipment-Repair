@@ -33,7 +33,7 @@ The database consists of the following tables:
   - `address`
   - `phone_number`
 
-Please note that the `Equipment` table includes the `serial_number` column and the corrected column names for `last_service_date`, `last_service_done`, and `next_pnm_date`.
+Please note that this project is a work in progress, and the database structure may change in future iterations. We are continuously refining and improving the database to better serve the needs of Titan Equipment Repair.
 
 Each entry in the `Equipment` table is associated with a specific `location_id` from the `Location` table for future workflow.
 
