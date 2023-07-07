@@ -62,45 +62,23 @@ The database includes the following stored procedures for inserting data into th
 
 ### InsertEquipment
 
-This stored procedure allows you to insert equipment information into the `Equipment` table. It takes the following parameters:
-- `p_SerialNumber`
-- `p_LastServiceDate`
-- `p_LastServiceDone`
-- `p_NextPNMDate`
-- `p_NeedsParts`
-- `p_PartName`
-- `p_PartsArrived`
-- `p_LocationID`
+This stored procedure allows you to insert equipment information into the `Equipment` table.
 
 ### InsertLocation
 
-This stored procedure allows you to insert location information into the `Location` table. It takes the following parameters:
-- `p_Name`
-- `p_Address`
-- `p_PhoneNumber`
+This stored procedure allows you to insert location information into the `Location` table.
 
 ### InsertServiceHistory
 
-This stored procedure allows you to insert service history information into the `ServiceHistory` table. It takes the following parameters:
-- `p_EquipmentSerialNumber`
-- `p_ServiceDate`
-- `p_ServiceType`
-- `p_ServiceDescription`
-- `p_ServiceNotes`
+This stored procedure allows you to insert service history information into the `ServiceHistory` table.
 
 ### InsertShipping
 
-This stored procedure allows you to insert shipping information into the `Shipping` table. It takes the following parameters:
-- `p_EquipmentSerialNumber`
-- `p_ShippingDate`
-- `p_ShippingFrom`
-- `p_ShippingMethod`
-- `p_TrackingNumber`
-- `p_ShippingStatus`
+This stored procedure allows you to insert shipping information into the `Shipping` table.
 
 ## Indexing
 
-The following indexes have been added to improve query performance:
+To improve the performance of queries, the following indexes have been added:
 
 - `Equipment` table:
   - Index on `SerialNumber`
@@ -114,6 +92,16 @@ The following indexes have been added to improve query performance:
 
 - `Shipping` table:
   - Index on `EquipmentSerialNumber`
+
+## Error Handling
+
+The stored procedures in the database include error handling to ensure proper handling of exceptions that may occur during data insertion. By using the `DECLARE EXIT HANDLER FOR SQLEXCEPTION` statement, the procedures are equipped to handle any SQL exceptions that might arise.
+
+In case of an exception, the error handling section within each stored procedure allows for customized actions to be taken. Some common error handling practices include logging the error, rolling back the transaction, and displaying an error message to the user. You can customize the error handling section as per your specific requirements.
+
+The error handling mechanism ensures that the database maintains data consistency and integrity, even in the event of unexpected errors during data insertion.
+
+Feel free to modify the error handling section of each stored procedure according to your application's error handling needs.
 
 ## Contributing
 
