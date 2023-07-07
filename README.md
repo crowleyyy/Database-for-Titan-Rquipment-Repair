@@ -1,6 +1,6 @@
 # Database For Titan Equipment Repair
 
-Welcome to the Database For Titan Equipment Repair! This database is designed to manage information about forklift repairs and maintenance. It helps track forklifts, their service history, and the parts needed for repair.
+Welcome to the Database For Titan Equipment Repair! This database is designed to manage information about forklift repairs and maintenance. It helps track forklifts, their service history, parts needed for repair, and shipping details.
 
 ## Database Structure
 
@@ -44,15 +44,26 @@ The database consists of the following tables:
   - `service_notes`
   - `technician_id` (Foreign Key)
 
-The `ServiceHistory` table captures the service history for all equipment. It includes the following columns:
+### Shipping Table
 
-- `service_id`: A unique identifier for each service entry.
+- `Shipping` table:
+  - `shipping_id` (Primary Key)
+  - `equipment_serial_number` (Foreign Key)
+  - `shipping_date`
+  - `shipping_from` (Foreign Key)
+  - `shipping_method`
+  - `tracking_number`
+  - `shipping_status`
+
+The `Shipping` table stores shipping details for equipment. It includes the following columns:
+
+- `shipping_id`: A unique identifier for each shipping entry.
 - `equipment_serial_number`: A foreign key referencing the serial number of the equipment from the `Equipment` table.
-- `service_date`: The date when the service was performed.
-- `service_type`: The type of service performed (e.g., maintenance, repair, inspection).
-- `service_description`: A detailed description of the service performed.
-- `service_notes`: Additional notes or comments related to the service.
-- `technician_id`: A foreign key referencing the technician who performed the service from the `Users` table.
+- `shipping_date`: The date when the equipment was shipped.
+- `shipping_from`: A foreign key referencing the location from the `Location` table where the equipment was shipped from.
+- `shipping_method`: The method used for shipping.
+- `tracking_number`: The tracking number associated with the shipment.
+- `shipping_status`: The status of the shipment.
 
 Please note that this project is a work in progress, and the database structure may change in future iterations. We are continuously refining and improving the database to better serve the needs of Titan Equipment Repair.
 
