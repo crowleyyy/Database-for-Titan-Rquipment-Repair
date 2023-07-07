@@ -54,6 +54,17 @@ The database consists of the following tables:
   - `tracking_number`
   - `shipping_status`
 
+## Stored Procedures
+
+The database includes the following stored procedures for inserting data into the respective tables:
+
+- `InsertEquipment`: Inserts equipment information into the `Equipment` table.
+- `InsertLocation`: Inserts location information into the `Location` table.
+- `InsertServiceHistory`: Inserts service history information into the `ServiceHistory` table.
+- `InsertShipping`: Inserts shipping information into the `Shipping` table.
+
+These stored procedures provide a convenient way to insert data into the respective tables, helping streamline the data entry process.
+
 ## Indexing
 
 To improve the performance of the database queries, certain columns have been indexed. The following indexes have been added:
