@@ -1,7 +1,7 @@
 -- Create Equipment table
 CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT,
-  LastServiceDate DATE,
+  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
   NeedsParts ENUM('true', 'false', 'part ordered'),
