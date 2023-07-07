@@ -76,22 +76,17 @@ This stored procedure allows you to insert service history information into the 
 
 This stored procedure allows you to insert shipping information into the `Shipping` table.
 
-## Indexing
+### InsertUser
 
-To improve the performance of queries, the following indexes have been added:
+This stored procedure allows you to insert user information into the `Users` table.
 
-- `Equipment` table:
-  - Index on `SerialNumber`
-  - Index on `LocationID`
+### GetEquipmentByID
 
-- `Location` table:
-  - Index on `Name`
+This stored procedure retrieves equipment information by the provided `SerialNumber`.
 
-- `ServiceHistory` table:
-  - Index on `EquipmentSerialNumber`
+### GetServiceHistoryBySerialNumber
 
-- `Shipping` table:
-  - Index on `EquipmentSerialNumber`
+This stored procedure retrieves service history information by the provided `SerialNumber`.
 
 ## Error Handling
 
@@ -103,9 +98,6 @@ The error handling mechanism ensures that the database maintains data consistenc
 
 Feel free to modify the error handling section of each stored procedure according to your application's error handling needs.
 
-## SQL Script
-
-An SQL script is written into the code for practice.
 
 ## Contributing
 
