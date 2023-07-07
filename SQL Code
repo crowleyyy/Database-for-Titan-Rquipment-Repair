@@ -8,6 +8,132 @@ CREATE TABLE IF NOT EXISTS Equipment (
   PartName VARCHAR(255) DEFAULT NULL,
   PartsArrived ENUM('true', 'false', 'N/A'),
   LocationID INT,
+  FOREIGN KEY (LocationID) REFERENCES Location(ID),
+  INDEX idx_SerialNumber (SerialNumber),
+  INDEX idx_LocationID (LocationID)
+);
+
+-- Create Location table (if not already created)
+CREATE TABLE IF NOT EXISTS Location (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Name VARCHAR(255),
+  Address VARCHAR(255),
+  PhoneNumber VARCHAR(20),
+  INDEX idx_Name (Name)
+);
+
+-- Create ServiceHistory table (if not already created)
+CREATE TABLE IF NOT EXISTS ServiceHistory (
+  ServiceID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ServiceDate DATE,
+  ServiceType VARCHAR(255),
+  ServiceDescription VARCHAR(255),
+  ServiceNotes VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(LocationID),
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+);
+
+-- Create Shipping table (if not already created)
+CREATE TABLE IF NOT EXISTS Shipping (
+  ShippingID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ShippingDate DATE,
+  ShippingFrom INT,
+  ShippingMethod VARCHAR(255),
+  TrackingNumber VARCHAR(255),
+  ShippingStatus VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (ShippingFrom) REFERENCES Location(ID),
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+);
+
+-- Create Users table (if not already created)
+CREATE TABLE IF NOT EXISTS Users (
+  UserID INT PRIMARY KEY AUTO_INCREMENT,
+  Username VARCHAR(255) UNIQUE,
+  Password VARCHAR(255),
+  Email VARCHAR(255),
+  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_Username (Username)
+);
+
+-- Insert admin user record (if not already inserted)
+INSERT INTO Users (Username, Password, Email)
+VALUES ('admin', 'admin_password', 'admin@example.com');
+
+-- Create InsertEquipment stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertEquipment(
+  IN p_SerialNumber INT,
+  IN p_LastServiceDate DATE,
+  IN p_LastServiceDone VARCHAR(255),
+  IN p_NextPNMDate DATE,
+  IN p_NeedsParts ENUM('true', 'false', 'part ordered'),
+  IN p_PartName VARCHAR(255),
+  IN p_PartsArrived ENUM('true', 'false', 'N/A'),
+  IN p_LocationID INT
+)
+BEGIN
+  INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID)
+  VALUES (p_SerialNumber, p_LastServiceDate, p_LastServiceDone, p_NextPNMDate, p_NeedsParts, p_PartName, p_PartsArrived, p_LocationID);
+END $$
+DELIMITER ;
+
+-- Create InsertLocation stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertLocation(
+  IN p_Name VARCHAR(255),
+  IN p_Address VARCHAR(255),
+  IN p_PhoneNumber VARCHAR(20)
+)
+BEGIN
+  INSERT INTO Location (Name, Address, PhoneNumber)
+  VALUES (p_Name, p_Address, p_PhoneNumber);
+END $$
+DELIMITER ;
+
+-- Create InsertServiceHistory stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertServiceHistory(
+  IN p_EquipmentSerialNumber INT,
+  IN p_ServiceDate DATE,
+  IN p_ServiceType VARCHAR(255),
+  IN p_ServiceDescription VARCHAR(255),
+  IN p_ServiceNotes VARCHAR(255)
+)
+BEGIN
+  INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes)
+  VALUES (p_EquipmentSerialNumber, p_ServiceDate, p_ServiceType, p_ServiceDescription, p_ServiceNotes);
+END $$
+DELIMITER ;
+
+-- Create InsertShipping stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertShipping(
+  IN p_EquipmentSerialNumber INT,
+  IN p_ShippingDate DATE,
+  IN p_ShippingFrom INT,
+  IN p_ShippingMethod VARCHAR(255),
+  IN p_TrackingNumber VARCHAR(255),
+  IN p_ShippingStatus VARCHAR(255)
+)
+BEGIN
+  INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingCertainly! Here's the updated master code with consistent naming conventions applied:
+
+```sql
+
+-- Create Equipment table
+CREATE TABLE IF NOT EXISTS Equipment (
+  SerialNumber INT,
+  LastServiceDate DATE,
+  LastServiceDone VARCHAR(255),
+  NextPNMDate DATE,
+  NeedsParts ENUM('true', 'false', 'part ordered'),
+  PartName VARCHAR(255) DEFAULT NULL,
+  PartsArrived ENUM('true', 'false', 'N/A'),
+  LocationID INT,
   FOREIGN KEY (LocationID) REFERENCES Location(ID)
 );
 
