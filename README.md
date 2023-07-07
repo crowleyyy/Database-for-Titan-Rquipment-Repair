@@ -103,6 +103,10 @@ The error handling mechanism ensures that the database maintains data consistenc
 
 Feel free to modify the error handling section of each stored procedure according to your application's error handling needs.
 
+## SQL Script
+
+An SQL script is written into the code for practice.
+
 ## Contributing
 
 Thank you for considering contributing to the Database For Titan Equipment Repair project! We welcome any contributions that help improve the database and enhance its functionalities. To ensure a smooth collaboration, please review the guidelines outlined in the [Contributing](CONTRIBUTING.md) file.
