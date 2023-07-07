@@ -1,13 +1,3 @@
--- Drop the existing tables (only if needed)
--- DROP TABLE IF EXISTS PlaceA;
--- DROP TABLE IF EXISTS PlaceB;
--- DROP TABLE IF EXISTS PlaceDetails;
--- DROP TABLE IF EXISTS Equipment;
--- DROP TABLE IF EXISTS ServiceHistory;
--- DROP TABLE IF EXISTS Shipping;
--- DROP TABLE IF EXISTS Invoice;
--- DROP TABLE IF EXISTS Customer;
-
 -- Create Equipment table
 CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT,
