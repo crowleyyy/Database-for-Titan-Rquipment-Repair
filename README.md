@@ -9,77 +9,111 @@ The database consists of the following tables:
 ### Authentication Table
 
 - `Users` table:
-  - `user_id` (Primary Key)
-  - `username`
-  - `password`
+  - `UserID` (Primary Key)
+  - `Username` (Unique)
+  - `Password`
+  - `Email`
+  - `CreatedAt`
 
 ### Equipment Table
 
 - `Equipment` table:
-  - `serial_number` (Primary Key)
-  - `last_service_date`
-  - `last_service_done`
-  - `next_pnm_date`
-  - `needs_parts` (ENUM: "True", "False", "Part ordered")
-  - `parts_name`
-  - `parts_arrived` (ENUM: "True", "False", "N/A")
-  - `location_id` (Foreign Key)
+  - `SerialNumber`
+  - `LastServiceDate`
+  - `LastServiceDone`
+  - `NextPNMDate`
+  - `NeedsParts` (ENUM: 'true', 'false', 'part ordered')
+  - `PartName`
+  - `PartsArrived` (ENUM: 'true', 'false', 'N/A')
+  - `LocationID` (Foreign Key)
 
 ### Location Table
 
 - `Location` table:
-  - `location_id` (Primary Key)
-  - `name`
-  - `address`
-  - `phone_number`
+  - `ID` (Primary Key)
+  - `Name`
+  - `Address`
+  - `PhoneNumber`
 
 ### Service History Table
 
 - `ServiceHistory` table:
-  - `service_id` (Primary Key)
-  - `equipment_serial_number` (Foreign Key)
-  - `service_date`
-  - `service_type`
-  - `service_description`
-  - `service_notes`
+  - `ServiceID` (Primary Key)
+  - `EquipmentSerialNumber` (Foreign Key)
+  - `ServiceDate`
+  - `ServiceType`
+  - `ServiceDescription`
+  - `ServiceNotes`
 
 ### Shipping Table
 
 - `Shipping` table:
-  - `shipping_id` (Primary Key)
-  - `equipment_serial_number` (Foreign Key)
-  - `shipping_date`
-  - `shipping_from` (Foreign Key)
-  - `shipping_method`
-  - `tracking_number`
-  - `shipping_status`
+  - `ShippingID` (Primary Key)
+  - `EquipmentSerialNumber` (Foreign Key)
+  - `ShippingDate`
+  - `ShippingFrom` (Foreign Key)
+  - `ShippingMethod`
+  - `TrackingNumber`
+  - `ShippingStatus`
 
 ## Stored Procedures
 
 The database includes the following stored procedures for inserting data into the respective tables:
 
-- `InsertEquipment`: Inserts equipment information into the `Equipment` table.
-- `InsertLocation`: Inserts location information into the `Location` table.
-- `InsertServiceHistory`: Inserts service history information into the `ServiceHistory` table.
-- `InsertShipping`: Inserts shipping information into the `Shipping` table.
+### InsertEquipment
 
-These stored procedures provide a convenient way to insert data into the respective tables, helping streamline the data entry process.
+This stored procedure allows you to insert equipment information into the `Equipment` table. It takes the following parameters:
+- `p_SerialNumber`
+- `p_LastServiceDate`
+- `p_LastServiceDone`
+- `p_NextPNMDate`
+- `p_NeedsParts`
+- `p_PartName`
+- `p_PartsArrived`
+- `p_LocationID`
+
+### InsertLocation
+
+This stored procedure allows you to insert location information into the `Location` table. It takes the following parameters:
+- `p_Name`
+- `p_Address`
+- `p_PhoneNumber`
+
+### InsertServiceHistory
+
+This stored procedure allows you to insert service history information into the `ServiceHistory` table. It takes the following parameters:
+- `p_EquipmentSerialNumber`
+- `p_ServiceDate`
+- `p_ServiceType`
+- `p_ServiceDescription`
+- `p_ServiceNotes`
+
+### InsertShipping
+
+This stored procedure allows you to insert shipping information into the `Shipping` table. It takes the following parameters:
+- `p_EquipmentSerialNumber`
+- `p_ShippingDate`
+- `p_ShippingFrom`
+- `p_ShippingMethod`
+- `p_TrackingNumber`
+- `p_ShippingStatus`
 
 ## Indexing
 
-To improve the performance of the database queries, certain columns have been indexed. The following indexes have been added:
+The following indexes have been added to improve query performance:
 
 - `Equipment` table:
-  - Index on `serial_number` column for faster lookup of equipment by serial number.
-  - Index on `location_id` column for efficient retrieval of equipment based on location.
+  - Index on `SerialNumber`
+  - Index on `LocationID`
+
+- `Location` table:
+  - Index on `Name`
 
 - `ServiceHistory` table:
-  - Index on `equipment_serial_number` column for quick access to service history by equipment.
+  - Index on `EquipmentSerialNumber`
 
 - `Shipping` table:
-  - Index on `equipment_serial_number` column for efficient retrieval of shipping details by equipment.
-
-The indexes help optimize the database queries and enhance the overall performance of the system.
+  - Index on `EquipmentSerialNumber`
 
 ## Contributing
 
