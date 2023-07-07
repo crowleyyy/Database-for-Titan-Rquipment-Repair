@@ -1,3 +1,13 @@
+-- Drop the existing tables (only if needed)
+-- DROP TABLE IF EXISTS PlaceA;
+-- DROP TABLE IF EXISTS PlaceB;
+-- DROP TABLE IF EXISTS PlaceDetails;
+-- DROP TABLE IF EXISTS Equipment;
+-- DROP TABLE IF EXISTS ServiceHistory;
+-- DROP TABLE IF EXISTS Shipping;
+-- DROP TABLE IF EXISTS Invoice;
+-- DROP TABLE IF EXISTS Customer;
+
 -- Create Equipment table
 CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT,
@@ -7,7 +17,6 @@ CREATE TABLE IF NOT EXISTS Equipment (
   NeedsParts ENUM('true', 'false', 'part ordered'),
   PartName VARCHAR(255) DEFAULT NULL,
   PartsArrived ENUM('true', 'false', 'N/A'),
-  Place VARCHAR(255),
   LocationID INT,
   FOREIGN KEY (LocationID) REFERENCES Location(ID)
 );
@@ -28,21 +37,21 @@ CREATE TABLE IF NOT EXISTS ServiceHistory (
   service_type VARCHAR(255),
   service_description VARCHAR(255),
   service_notes VARCHAR(255),
-  technician_id INT,
   FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
-  FOREIGN KEY (technician_id) REFERENCES Users(UserID)
+  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(LocationID)
 );
 
--- Create Shipping table
+-- Create Shipping table (if not already created)
 CREATE TABLE IF NOT EXISTS Shipping (
   shipping_id INT PRIMARY KEY AUTO_INCREMENT,
   equipment_serial_number INT,
   shipping_date DATE,
-  shipping_from VARCHAR(255),
+  shipping_from INT,
   shipping_method VARCHAR(255),
   tracking_number VARCHAR(255),
   shipping_status VARCHAR(255),
-  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber)
+  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (shipping_from) REFERENCES Location(ID)
 );
 
 -- Create Users table (if not already created)
