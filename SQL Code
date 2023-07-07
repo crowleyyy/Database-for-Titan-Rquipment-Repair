@@ -20,11 +20,18 @@ CREATE TABLE IF NOT EXISTS Location (
   PhoneNumber VARCHAR(20)
 );
 
--- Insert sample records into Location table
-INSERT INTO Location (Name, Address, PhoneNumber)
-VALUES
-  ('Place A', '123 Main Street, City A', '123-456-7890'),
-  ('Place B', '456 Elm Street, City B', '987-654-3210');
+-- Create ServiceHistory table
+CREATE TABLE IF NOT EXISTS ServiceHistory (
+  service_id INT PRIMARY KEY AUTO_INCREMENT,
+  equipment_serial_number INT,
+  service_date DATE,
+  service_type VARCHAR(255),
+  service_description VARCHAR(255),
+  service_notes VARCHAR(255),
+  technician_id INT,
+  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (technician_id) REFERENCES Users(UserID)
+);
 
 -- Create Users table (if not already created)
 CREATE TABLE IF NOT EXISTS Users (
