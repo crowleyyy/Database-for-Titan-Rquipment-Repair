@@ -1,7 +1,7 @@
 -- Create Equipment table
 CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT,
-  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),
+  LastServiceDate DATE CHECK (LastServiceDate <= CURDATE()),  -- Check constraint
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
   NeedsParts ENUM('true', 'false', 'part ordered'),
@@ -21,27 +21,27 @@ CREATE TABLE IF NOT EXISTS Location (
 
 -- Create ServiceHistory table (if not already created)
 CREATE TABLE IF NOT EXISTS ServiceHistory (
-  service_id INT PRIMARY KEY AUTO_INCREMENT,
-  equipment_serial_number INT,
-  service_date DATE CHECK (service_date <= CURDATE()),
-  service_type VARCHAR(255),
-  service_description VARCHAR(255),
-  service_notes VARCHAR(255),
-  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
-  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(LocationID)
+  ServiceID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ServiceDate DATE CHECK (ServiceDate <= CURDATE()), -- Check constraint
+  ServiceType VARCHAR(255),
+  ServiceDescription VARCHAR(255),
+  ServiceNotes VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(LocationID)
 );
 
 -- Create Shipping table (if not already created)
 CREATE TABLE IF NOT EXISTS Shipping (
-  shipping_id INT PRIMARY KEY AUTO_INCREMENT,
-  equipment_serial_number INT,
-  shipping_date DATE CHECK (shipping_date <= CURDATE()),
-  shipping_from INT,
-  shipping_method VARCHAR(255),
-  tracking_number VARCHAR(255),
-  shipping_status VARCHAR(255),
-  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
-  FOREIGN KEY (shipping_from) REFERENCES Location(ID)
+  ShippingID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ShippingDate DATE CHECK (ShippingDate <= CURDATE()), -- Check constraint
+  ShippingFrom INT,
+  ShippingMethod VARCHAR(255),
+  TrackingNumber VARCHAR(255),
+  ShippingStatus VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (ShippingFrom) REFERENCES Location(ID)
 );
 
 -- Create Users table (if not already created)
