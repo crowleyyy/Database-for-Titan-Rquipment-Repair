@@ -49,54 +49,26 @@ The database consists of the following tables:
   - `shipping_id` (Primary Key)
   - `equipment_serial_number` (Foreign Key)
   - `shipping_date`
-  - `shipping_from` 
+  - `shipping_from` (Foreign Key)
   - `shipping_method`
   - `tracking_number`
   - `shipping_status`
 
-## Stored Procedures
+## Indexing
 
-The database includes the following stored procedures for inserting data into the respective tables:
+To improve the performance of the database queries, certain columns have been indexed. The following indexes have been added:
 
-### InsertEquipment
+- `Equipment` table:
+  - Index on `serial_number` column for faster lookup of equipment by serial number.
+  - Index on `location_id` column for efficient retrieval of equipment based on location.
 
-This stored procedure allows you to insert equipment information into the `Equipment` table. It takes the following parameters:
-- `p_SerialNumber`: The serial number of the equipment.
-- `p_LastServiceDate`: The date of the last service.
-- `p_LastServiceDone`: Details about the last service performed.
-- `p_NextPNMDate`: The next planned maintenance date.
-- `p_NeedsParts`: Indicates if parts are needed ("True", "False", or "Part ordered").
-- `p_PartName`: The name of the required parts.
-- `p_PartsArrived`: Indicates if parts have arrived ("True", "False", or "N/A").
-- `p_LocationID`: The ID of the location associated with the equipment.
+- `ServiceHistory` table:
+  - Index on `equipment_serial_number` column for quick access to service history by equipment.
 
-### InsertLocation
+- `Shipping` table:
+  - Index on `equipment_serial_number` column for efficient retrieval of shipping details by equipment.
 
-This stored procedure allows you to insert location information into the `Location` table. It takes the following parameters:
-- `p_Name`: The name of the location.
-- `p_Address`: The address of the location.
-- `p_PhoneNumber`: The phone number of the location.
-
-### InsertServiceHistory
-
-This stored procedure allows you to insert service history information into the `ServiceHistory` table. It takes the following parameters:
-- `p_EquipmentSerialNumber`: The serial number of the equipment.
-- `p_ServiceDate`: The date of the service.
-- `p_ServiceType`: The type of service performed.
-- `p_ServiceDescription`: A description of the service.
-- `p_ServiceNotes`: Additional notes about the service.
-
-### InsertShipping
-
-This stored procedure allows you to insert shipping information into the `Shipping` table. It takes the following parameters:
-- `p_EquipmentSerialNumber`: The serial number of the equipment.
-- `p_ShippingDate`: The date of the shipment.
-- `p_ShippingFrom`: The ID of the location from where the equipment was shipped.
-- `p_ShippingMethod`: The shipping method used.
-- `p_TrackingNumber`: The tracking number associated with the shipment.
-- `p_ShippingStatus`: The status of the shipment.
-
-Please note that these stored procedures provide a convenient way to insert data into the respective tables, helping streamline the data entry process.
+The indexes help optimize the database queries and enhance the overall performance of the system.
 
 ## Contributing
 
