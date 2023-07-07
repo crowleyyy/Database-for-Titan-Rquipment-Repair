@@ -64,6 +64,19 @@ CREATE TABLE IF NOT EXISTS Users (
 INSERT INTO Users (Username, Password, Email)
 VALUES ('admin', 'admin_password', 'admin@example.com');
 
+-- Create InsertUser stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertUser(
+  IN p_Username VARCHAR(255),
+  IN p_Password VARCHAR(255),
+  IN p_Email VARCHAR(255)
+)
+BEGIN
+  INSERT INTO Users (Username, Password, Email)
+  VALUES (p_Username, p_Password, p_Email);
+END $$
+DELIMITER ;
+
 -- Create InsertEquipment stored procedure
 DELIMITER $$
 CREATE PROCEDURE InsertEquipment(
