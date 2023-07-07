@@ -49,7 +49,7 @@ The database consists of the following tables:
   - `shipping_id` (Primary Key)
   - `equipment_serial_number` (Foreign Key)
   - `shipping_date`
-  - `shipping_from` (Foreign Key)
+  - `shipping_from` 
   - `shipping_method`
   - `tracking_number`
   - `shipping_status`
