@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Location (
   PhoneNumber VARCHAR(20)
 );
 
--- Create ServiceHistory table
+-- Create ServiceHistory table (if not already created)
 CREATE TABLE IF NOT EXISTS ServiceHistory (
   service_id INT PRIMARY KEY AUTO_INCREMENT,
   equipment_serial_number INT,
@@ -31,6 +31,18 @@ CREATE TABLE IF NOT EXISTS ServiceHistory (
   technician_id INT,
   FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber),
   FOREIGN KEY (technician_id) REFERENCES Users(UserID)
+);
+
+-- Create Shipping table
+CREATE TABLE IF NOT EXISTS Shipping (
+  shipping_id INT PRIMARY KEY AUTO_INCREMENT,
+  equipment_serial_number INT,
+  shipping_date DATE,
+  shipping_from VARCHAR(255),
+  shipping_method VARCHAR(255),
+  tracking_number VARCHAR(255),
+  shipping_status VARCHAR(255),
+  FOREIGN KEY (equipment_serial_number) REFERENCES Equipment(SerialNumber)
 );
 
 -- Create Users table (if not already created)
