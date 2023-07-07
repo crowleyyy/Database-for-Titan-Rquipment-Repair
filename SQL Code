@@ -1,114 +1,166 @@
-# Database For Titan Equipment Repair
+-- Create Equipment table
+CREATE TABLE IF NOT EXISTS Equipment (
+  SerialNumber INT,
+  LastServiceDate DATE,
+  LastServiceDone VARCHAR(255),
+  NextPNMDate DATE,
+  NeedsParts ENUM('true', 'false', 'part ordered'),
+  PartName VARCHAR(255) DEFAULT NULL,
+  PartsArrived ENUM('true', 'false', 'N/A'),
+  LocationID INT,
+  FOREIGN KEY (LocationID) REFERENCES Location(ID),
+  INDEX idx_SerialNumber (SerialNumber),
+  INDEX idx_LocationID (LocationID)
+);
 
-Welcome to the Database For Titan Equipment Repair! This database is designed to manage information about forklift repairs and maintenance. It helps track forklifts, their service history, parts needed for repair, and shipping details.
+-- Create Location table (if not already created)
+CREATE TABLE IF NOT EXISTS Location (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Name VARCHAR(255),
+  Address VARCHAR(255),
+  PhoneNumber VARCHAR(20),
+  INDEX idx_Name (Name)
+);
 
-## Database Structure
+-- Create ServiceHistory table (if not already created)
+CREATE TABLE IF NOT EXISTS ServiceHistory (
+  ServiceID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ServiceDate DATE,
+  ServiceType VARCHAR(255),
+  ServiceDescription VARCHAR(255),
+  ServiceNotes VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(LocationID),
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+);
 
-The database consists of the following tables:
+-- Create Shipping table (if not already created)
+CREATE TABLE IF NOT EXISTS Shipping (
+  ShippingID INT PRIMARY KEY AUTO_INCREMENT,
+  EquipmentSerialNumber INT,
+  ShippingDate DATE,
+  ShippingFrom INT,
+  ShippingMethod VARCHAR(255),
+  TrackingNumber VARCHAR(255),
+  ShippingStatus VARCHAR(255),
+  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
+  FOREIGN KEY (ShippingFrom) REFERENCES Location(ID),
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+);
 
-### Authentication Table
+-- Create Users table (if not already created)
+CREATE TABLE IF NOT EXISTS Users (
+  UserID INT PRIMARY KEY AUTO_INCREMENT,
+  Username VARCHAR(255) UNIQUE,
+  Password VARCHAR(255),
+  Email VARCHAR(255),
+  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_Username (Username)
+);
 
-- `Users` table:
-  - `UserID` (Primary Key)
-  - `Username` (Unique)
-  - `Password`
-  - `Email`
-  - `CreatedAt`
+-- Insert admin user record (if not already inserted)
+INSERT INTO Users (Username, Password, Email)
+VALUES ('admin', 'admin_password', 'admin@example.com');
 
-### Equipment Table
+-- Create InsertEquipment stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertEquipment(
+  IN p_SerialNumber INT,
+  IN p_LastServiceDate DATE,
+  IN p_LastServiceDone VARCHAR(255),
+  IN p_NextPNMDate DATE,
+  IN p_NeedsParts ENUM('true', 'false', 'part ordered'),
+  IN p_PartName VARCHAR(255),
+  IN p_PartsArrived ENUM('true', 'false', 'N/A'),
+  IN p_LocationID INT
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+  
+  START TRANSACTION;
+  
+  INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID)
+  VALUES (p_SerialNumber, p_LastServiceDate, p_LastServiceDone, p_NextPNMDate, p_NeedsParts, p_PartName, p_PartsArrived, p_LocationID);
+  
+  COMMIT;
+END $$
+DELIMITER ;
 
-- `Equipment` table:
-  - `SerialNumber`
-  - `LastServiceDate`
-  - `LastServiceDone`
-  - `NextPNMDate`
-  - `NeedsParts` (ENUM: 'true', 'false', 'part ordered')
-  - `PartName`
-  - `PartsArrived` (ENUM: 'true', 'false', 'N/A')
-  - `LocationID` (Foreign Key)
+-- Create InsertLocation stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertLocation(
+  IN p_Name VARCHAR(255),
+  IN p_Address VARCHAR(255),
+  IN p_PhoneNumber VARCHAR(20)
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+  
+  START TRANSACTION;
+  
+  INSERT INTO Location (Name, Address, PhoneNumber)
+  VALUES (p_Name, p_Address, p_PhoneNumber);
+  
+  COMMIT;
+END $$
+DELIMITER ;
 
-### Location Table
+-- Create InsertServiceHistory stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertServiceHistory(
+  IN p_EquipmentSerialNumber INT,
+  IN p_ServiceDate DATE,
+  IN p_ServiceType VARCHAR(255),
+  IN p_ServiceDescription VARCHAR(255),
+  IN p_ServiceNotes VARCHAR(255)
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+  
+  START TRANSACTION;
+  
+  INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes)
+  VALUES (p_EquipmentSerialNumber, p_ServiceDate, p_ServiceType, p_ServiceDescription, p_ServiceNotes);
+  
+  COMMIT;
+END $$
+DELIMITER ;
 
-- `Location` table:
-  - `ID` (Primary Key)
-  - `Name`
-  - `Address`
-  - `PhoneNumber`
-
-### Service History Table
-
-- `ServiceHistory` table:
-  - `ServiceID` (Primary Key)
-  - `EquipmentSerialNumber` (Foreign Key)
-  - `ServiceDate`
-  - `ServiceType`
-  - `ServiceDescription`
-  - `ServiceNotes`
-
-### Shipping Table
-
-- `Shipping` table:
-  - `ShippingID` (Primary Key)
-  - `EquipmentSerialNumber` (Foreign Key)
-  - `ShippingDate`
-  - `ShippingFrom` (Foreign Key)
-  - `ShippingMethod`
-  - `TrackingNumber`
-  - `ShippingStatus`
-
-## Stored Procedures
-
-The database includes the following stored procedures for inserting data into the respective tables:
-
-### InsertEquipment
-
-This stored procedure allows you to insert equipment information into the `Equipment` table.
-
-### InsertLocation
-
-This stored procedure allows you to insert location information into the `Location` table.
-
-### InsertServiceHistory
-
-This stored procedure allows you to insert service history information into the `ServiceHistory` table.
-
-### InsertShipping
-
-This stored procedure allows you to insert shipping information into the `Shipping` table.
-
-## Indexing
-
-To improve the performance of queries, the following indexes have been added:
-
-- `Equipment` table:
-  - Index on `SerialNumber`
-  - Index on `LocationID`
-
-- `Location` table:
-  - Index on `Name`
-
-- `ServiceHistory` table:
-  - Index on `EquipmentSerialNumber`
-
-- `Shipping` table:
-  - Index on `EquipmentSerialNumber`
-
-## Error Handling
-
-The stored procedures in the database include error handling to ensure proper handling of exceptions that may occur during data insertion. By using the `DECLARE EXIT HANDLER FOR SQLEXCEPTION` statement, the procedures are equipped to handle any SQL exceptions that might arise.
-
-In case of an exception, the error handling section within each stored procedure allows for customized actions to be taken. Some common error handling practices include logging the error, rolling back the transaction, and displaying an error message to the user. You can customize the error handling section as per your specific requirements.
-
-The error handling mechanism ensures that the database maintains data consistency and integrity, even in the event of unexpected errors during data insertion.
-
-Feel free to modify the error handling section of each stored procedure according to your application's error handling needs.
-
-## Contributing
-
-Thank you for considering contributing to the Database For Titan Equipment Repair project! We welcome any contributions that help improve the database and enhance its functionalities. To ensure a smooth collaboration, please review the guidelines outlined in the [Contributing](CONTRIBUTING.md) file.
-
-## License
-
-The Database For Titan Equipment Repair is licensed under the [MIT License](LICENSE).
-
-We appreciate your interest and contributions to this project. Together, we can make the database more comprehensive and useful!
+-- Create InsertShipping stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertShipping(
+  IN p_EquipmentSerialNumber INT,
+  IN p_ShippingDate DATE,
+  IN p_ShippingFrom INT,
+  IN p_ShippingMethod VARCHAR(255),
+  IN p_TrackingNumber VARCHAR(255),
+  IN p_ShippingStatus VARCHAR(255)
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+  
+  START TRANSACTION;
+  
+  INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
+  VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
+  
+  COMMIT;
+END $$
+DELIMITER ;
