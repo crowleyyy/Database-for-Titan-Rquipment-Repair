@@ -63,8 +63,6 @@ def delete_equipment(serial_number):
     cursor.execute(query, values)
     db.commit()
 
-# Add more functions for other database operations (e.g., select_service_history, update_location, delete_shipping)
-
 # Example usage
 insert_equipment(12345, '2021-01-01', 'Service 1', '2022-01-01', 'false', 'Part 1', 'true', 1)
 insert_location('Location 1', 'Address 1', '1234567890')
