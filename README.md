@@ -18,7 +18,7 @@ The database consists of the following tables:
 ### Equipment Table
 
 - `Equipment` table:
-  - `SerialNumber`
+  - `SerialNumber` (Primary Key)
   - `LastServiceDate`
   - `LastServiceDone`
   - `NextPNMDate`
@@ -74,9 +74,7 @@ This stored procedure allows you to insert service history information into the 
 
 ### InsertShipping
 
-This stored procedure allows you to insert shipping information into the `Shipping` table. 
-
-**Modified**: When a shipping record is inserted using the InsertShipping procedure, it will check the corresponding Equipment record's PartsArrived column. If the value is 'N/A', indicating that the parts have not arrived yet, it will update the PartsArrived column to 'true'.
+This stored procedure allows you to insert shipping information into the `Shipping` table.
 
 ### InsertUser
 
@@ -89,6 +87,14 @@ This stored procedure retrieves equipment information by the provided `SerialNum
 ### GetServiceHistoryBySerialNumber
 
 This stored procedure retrieves service history information by the provided `SerialNumber`.
+
+## Triggers
+
+The database includes the following trigger:
+
+### UpdateShippingStatus
+
+This trigger adds a trigger called "UpdateShippingStatus" that automatically updates the `ShippingStatus` in the `Shipping` table when the `PartsArrived` value in the `Equipment` table is set to 'true'. The trigger calls the "AutoUpdateShippingStatus" function, which performs the update operation.
 
 ## Error Handling
 
