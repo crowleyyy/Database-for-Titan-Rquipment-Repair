@@ -90,11 +90,15 @@ This stored procedure retrieves service history information by the provided `Ser
 
 ## Triggers
 
-The database includes the following trigger:
+The database includes the following triggers:
 
 ### UpdateShippingStatus
 
 This trigger adds a trigger called "UpdateShippingStatus" that automatically updates the `ShippingStatus` in the `Shipping` table when the `PartsArrived` value in the `Equipment` table is set to 'true'. The trigger calls the "AutoUpdateShippingStatus" function, which performs the update operation.
+
+### UpdateEquipmentStatus
+
+This trigger adds a trigger called "UpdateEquipmentStatus" that automatically updates the `PartsArrived` column in the `Equipment` table when the `ShippingStatus` value in the `Shipping` table changes. The trigger calls the "AutoUpdateEquipmentStatus" function, which performs the update operation.
 
 ## Error Handling
 
