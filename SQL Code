@@ -75,6 +75,12 @@ CREATE PROCEDURE InsertEquipment(
   IN p_LocationID INT
 )
 BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
   INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID)
   VALUES (p_SerialNumber, p_LastServiceDate, p_LastServiceDone, p_NextPNMDate, p_NeedsParts, p_PartName, p_PartsArrived, p_LocationID);
 END $$
@@ -88,6 +94,12 @@ CREATE PROCEDURE InsertLocation(
   IN p_PhoneNumber VARCHAR(20)
 )
 BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
   INSERT INTO Location (Name, Address, PhoneNumber)
   VALUES (p_Name, p_Address, p_PhoneNumber);
 END $$
@@ -103,6 +115,12 @@ CREATE PROCEDURE InsertServiceHistory(
   IN p_ServiceNotes VARCHAR(255)
 )
 BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
   INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes)
   VALUES (p_EquipmentSerialNumber, p_ServiceDate, p_ServiceType, p_ServiceDescription, p_ServiceNotes);
 END $$
@@ -119,6 +137,12 @@ CREATE PROCEDURE InsertShipping(
   IN p_ShippingStatus VARCHAR(255)
 )
 BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
   INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
   VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
 END $$
