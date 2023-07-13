@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS Equipment (
   LocationID INT,
   FOREIGN KEY (LocationID) REFERENCES Location(ID),
   INDEX idx_SerialNumber (SerialNumber),
-  INDEX idx_LocationID (LocationID),
-  CHECK (LastServiceDate <= CURDATE())
+  INDEX idx_LocationID (LocationID)
 );
 
 -- Create Location table (if not already created)
@@ -64,19 +63,6 @@ CREATE TABLE IF NOT EXISTS Users (
 INSERT INTO Users (Username, Password, Email)
 VALUES ('admin', 'admin_password', 'admin@example.com');
 
--- Create InsertUser stored procedure
-DELIMITER $$
-CREATE PROCEDURE InsertUser(
-  IN p_Username VARCHAR(255),
-  IN p_Password VARCHAR(255),
-  IN p_Email VARCHAR(255)
-)
-BEGIN
-  INSERT INTO Users (Username, Password, Email)
-  VALUES (p_Username, p_Password, p_Email);
-END $$
-DELIMITER ;
-
 -- Create InsertEquipment stored procedure
 DELIMITER $$
 CREATE PROCEDURE InsertEquipment(
@@ -90,18 +76,8 @@ CREATE PROCEDURE InsertEquipment(
   IN p_LocationID INT
 )
 BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-  
-  START TRANSACTION;
-  
   INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID)
   VALUES (p_SerialNumber, p_LastServiceDate, p_LastServiceDone, p_NextPNMDate, p_NeedsParts, p_PartName, p_PartsArrived, p_LocationID);
-  
-  COMMIT;
 END $$
 DELIMITER ;
 
@@ -113,18 +89,8 @@ CREATE PROCEDURE InsertLocation(
   IN p_PhoneNumber VARCHAR(20)
 )
 BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-  
-  START TRANSACTION;
-  
   INSERT INTO Location (Name, Address, PhoneNumber)
   VALUES (p_Name, p_Address, p_PhoneNumber);
-  
-  COMMIT;
 END $$
 DELIMITER ;
 
@@ -138,42 +104,33 @@ CREATE PROCEDURE InsertServiceHistory(
   IN p_ServiceNotes VARCHAR(255)
 )
 BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-  
-  START TRANSACTION;
-  
   INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes)
   VALUES (p_EquipmentSerialNumber, p_ServiceDate, p_ServiceType, p_ServiceDescription, p_ServiceNotes);
-  
-  COMMIT;
 END $$
 DELIMITER ;
 
 -- Create InsertShipping stored procedure
 DELIMITER $$
-CREATE PROCEDURE Insert
-
--- Create GetEquipmentById stored procedure
-DELIMITER $$
-CREATE PROCEDURE GetEquipmentByID(
-  IN p_SerialNumber INT
+CREATE PROCEDURE InsertShipping(
+  IN p_EquipmentSerialNumber INT,
+  IN p_ShippingDate DATE,
+  IN p_ShippingFrom INT,
+  IN p_ShippingMethod VARCHAR(255),
+  IN p_TrackingNumber VARCHAR(255),
+  IN p_ShippingStatus VARCHAR(255)
 )
 BEGIN
-  SELECT * FROM Equipment WHERE SerialNumber = p_SerialNumber;
+  DECLARE partsArrived ENUM('true', 'false', 'N/A');
+  
+  INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
+  VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
+  
+  -- Check if parts arrived and update Equipment table accordingly
+  SELECT PartsArrived INTO partsArrived FROM Equipment WHERE SerialNumber = p_EquipmentSerialNumber;
+  
+  IF partsArrived = 'N/A' THEN
+    UPDATE Equipment SET PartsArrived = 'true' WHERE SerialNumber = p_EquipmentSerialNumber;
+  END IF;
+  
 END $$
 DELIMITER ;
-
--- Create GetServiceHistoryBySerialNumber stored procedure
-DELIMITER $$
-CREATE PROCEDURE GetServiceHistoryBySerialNumber(
-  IN p_SerialNumber INT
-)
-BEGIN
-  SELECT * FROM ServiceHistory WHERE EquipmentSerialNumber = p_SerialNumber;
-END $$
-DELIMITER ;
-
