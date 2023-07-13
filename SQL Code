@@ -1,6 +1,6 @@
 -- Create Equipment table
 CREATE TABLE IF NOT EXISTS Equipment (
-  SerialNumber INT,
+  SerialNumber INT PRIMARY KEY,
   LastServiceDate DATE,
   LastServiceDone VARCHAR(255),
   NextPNMDate DATE,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Equipment (
   INDEX idx_LocationID (LocationID)
 );
 
--- Create Location table (if not already created)
+-- Create Location table
 CREATE TABLE IF NOT EXISTS Location (
   ID INT PRIMARY KEY AUTO_INCREMENT,
   Name VARCHAR(255),
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Location (
   INDEX idx_Name (Name)
 );
 
--- Create ServiceHistory table (if not already created)
+-- Create ServiceHistory table
 CREATE TABLE IF NOT EXISTS ServiceHistory (
   ServiceID INT PRIMARY KEY AUTO_INCREMENT,
   EquipmentSerialNumber INT,
@@ -31,11 +31,10 @@ CREATE TABLE IF NOT EXISTS ServiceHistory (
   ServiceDescription VARCHAR(255),
   ServiceNotes VARCHAR(255),
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
-  FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(LocationID),
   INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
 );
 
--- Create Shipping table (if not already created)
+-- Create Shipping table
 CREATE TABLE IF NOT EXISTS Shipping (
   ShippingID INT PRIMARY KEY AUTO_INCREMENT,
   EquipmentSerialNumber INT,
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Shipping (
   INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
 );
 
--- Create Users table (if not already created)
+-- Create Users table
 CREATE TABLE IF NOT EXISTS Users (
   UserID INT PRIMARY KEY AUTO_INCREMENT,
   Username VARCHAR(255) UNIQUE,
@@ -59,9 +58,9 @@ CREATE TABLE IF NOT EXISTS Users (
   INDEX idx_Username (Username)
 );
 
--- Insert admin user record (if not already inserted)
-INSERT INTO Users (Username, Password, Email)
-VALUES ('admin', 'admin_password', 'admin@example.com');
+-- Insert admin user record
+INSERT IGNORE INTO Users (UserID, Username, Password, Email)
+VALUES (1, 'admin', 'admin_password', 'admin@example.com');
 
 -- Create InsertEquipment stored procedure
 DELIMITER $$
@@ -120,17 +119,30 @@ CREATE PROCEDURE InsertShipping(
   IN p_ShippingStatus VARCHAR(255)
 )
 BEGIN
-  DECLARE partsArrived ENUM('true', 'false', 'N/A');
-  
   INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
   VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
-  
-  -- Check if parts arrived and update Equipment table accordingly
-  SELECT PartsArrived INTO partsArrived FROM Equipment WHERE SerialNumber = p_EquipmentSerialNumber;
-  
-  IF partsArrived = 'N/A' THEN
-    UPDATE Equipment SET PartsArrived = 'true' WHERE SerialNumber = p_EquipmentSerialNumber;
-  END IF;
-  
 END $$
 DELIMITER ;
+
+-- Create AutoUpdateShippingStatus function
+DELIMITER $$
+CREATE FUNCTION AutoUpdateShippingStatus()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.PartsArrived = 'true' THEN
+    UPDATE Shipping
+    SET ShippingStatus = 'Arrived'
+    WHERE EquipmentSerialNumber = NEW.SerialNumber;
+  END IF;
+  RETURN NEW;
+END;
+$$
+DELIMITER ;
+
+-- Create trigger to call AutoUpdateShippingStatus
+CREATE TRIGGER UpdateShippingStatus
+AFTER UPDATE ON Equipment
+FOR EACH ROW
+EXECUTE FUNCTION AutoUpdateShippingStatus();
