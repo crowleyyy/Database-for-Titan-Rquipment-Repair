@@ -131,18 +131,18 @@ CREATE FUNCTION AutoUpdateShippingStatus()
   LANGUAGE plpgsql
 AS $$
 BEGIN
-  IF NEW.PartsArrived = 'true' THEN
-    UPDATE Shipping
-    SET ShippingStatus = 'Arrived'
-    WHERE EquipmentSerialNumber = NEW.SerialNumber;
-  END IF;
+  UPDATE Equipment
+  SET PartsArrived = NEW.ShippingStatus
+  WHERE SerialNumber = NEW.EquipmentSerialNumber;
+  
   RETURN NEW;
 END;
 $$
 DELIMITER ;
 
--- Create trigger to call AutoUpdateShippingStatus
-CREATE TRIGGER UpdateShippingStatus
-AFTER UPDATE ON Equipment
+-- Create trigger to update Equipment when ShippingStatus changes
+CREATE TRIGGER UpdateEquipmentStatus
+AFTER UPDATE ON Shipping
 FOR EACH ROW
+WHEN (NEW.ShippingStatus != OLD.ShippingStatus)
 EXECUTE FUNCTION AutoUpdateShippingStatus();
