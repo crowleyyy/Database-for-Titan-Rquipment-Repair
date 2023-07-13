@@ -6,15 +6,18 @@ Welcome to the Database For Titan Equipment Repair! This database is designed to
 
 The database consists of the following tables:
 
-### Authentication Table
+<details>
+<summary>Authentication Table</summary>
 Users table:
 - UserID (Primary Key)
 - Username (Unique)
 - Password
 - Email
 - CreatedAt
+</details>
 
-### Equipment Table
+<details>
+<summary>Equipment Table</summary>
 Equipment table:
 - SerialNumber
 - LastServiceDate
@@ -24,15 +27,19 @@ Equipment table:
 - PartName
 - PartsArrived (ENUM: 'true', 'false', 'N/A')
 - LocationID (Foreign Key)
+</details>
 
-### Location Table
+<details>
+<summary>Location Table</summary>
 Location table:
 - ID (Primary Key)
 - Name
 - Address
 - PhoneNumber
+</details>
 
-### Service History Table
+<details>
+<summary>Service History Table</summary>
 ServiceHistory table:
 - ServiceID (Primary Key)
 - EquipmentSerialNumber (Foreign Key)
@@ -40,8 +47,10 @@ ServiceHistory table:
 - ServiceType
 - ServiceDescription
 - ServiceNotes
+</details>
 
-### Shipping Table
+<details>
+<summary>Shipping Table</summary>
 Shipping table:
 - ShippingID (Primary Key)
 - EquipmentSerialNumber (Foreign Key)
@@ -50,6 +59,7 @@ Shipping table:
 - ShippingMethod
 - TrackingNumber
 - ShippingStatus
+</details>
 
 ## Stored Procedures
 
