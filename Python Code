@@ -1,0 +1,80 @@
+# app.py
+
+import mysql.connector
+
+# Connect to the database
+db = mysql.connector.connect(
+    host="localhost",
+    user="your_username",
+    password="your_password",
+    database="your_database"
+)
+
+# Create a cursor to interact with the database
+cursor = db.cursor()
+
+# Define functions for database operations
+
+def insert_equipment(serial_number, last_service_date, last_service_done, next_pnm_date, needs_parts, part_name, parts_arrived, location_id):
+    query = "INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    values = (serial_number, last_service_date, last_service_done, next_pnm_date, needs_parts, part_name, parts_arrived, location_id)
+    cursor.execute(query, values)
+    db.commit()
+
+def insert_location(name, address, phone_number):
+    query = "INSERT INTO Location (Name, Address, PhoneNumber) VALUES (%s, %s, %s)"
+    values = (name, address, phone_number)
+    cursor.execute(query, values)
+    db.commit()
+
+def insert_service_history(equipment_serial_number, service_date, service_type, service_description, service_notes):
+    query = "INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes) VALUES (%s, %s, %s, %s, %s)"
+    values = (equipment_serial_number, service_date, service_type, service_description, service_notes)
+    cursor.execute(query, values)
+    db.commit()
+
+def insert_shipping(equipment_serial_number, shipping_date, shipping_from, shipping_method, tracking_number, shipping_status):
+    query = "INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus) VALUES (%s, %s, %s, %s, %s, %s)"
+    values = (equipment_serial_number, shipping_date, shipping_from, shipping_method, tracking_number, shipping_status)
+    cursor.execute(query, values)
+    db.commit()
+
+def select_equipment(serial_number):
+    query = "SELECT * FROM Equipment WHERE SerialNumber = %s"
+    values = (serial_number,)
+    cursor.execute(query, values)
+    return cursor.fetchall()
+
+def select_location(location_id):
+    query = "SELECT * FROM Location WHERE ID = %s"
+    values = (location_id,)
+    cursor.execute(query, values)
+    return cursor.fetchall()
+
+def update_equipment(serial_number, last_service_date, last_service_done, next_pnm_date, needs_parts, part_name, parts_arrived, location_id):
+    query = "UPDATE Equipment SET LastServiceDate = %s, LastServiceDone = %s, NextPNMDate = %s, NeedsParts = %s, PartName = %s, PartsArrived = %s, LocationID = %s WHERE SerialNumber = %s"
+    values = (last_service_date, last_service_done, next_pnm_date, needs_parts, part_name, parts_arrived, location_id, serial_number)
+    cursor.execute(query, values)
+    db.commit()
+
+def delete_equipment(serial_number):
+    query = "DELETE FROM Equipment WHERE SerialNumber = %s"
+    values = (serial_number,)
+    cursor.execute(query, values)
+    db.commit()
+
+# Add more functions for other database operations (e.g., select_service_history, update_location, delete_shipping)
+
+# Example usage
+insert_equipment(12345, '2021-01-01', 'Service 1', '2022-01-01', 'false', 'Part 1', 'true', 1)
+insert_location('Location 1', 'Address 1', '1234567890')
+
+equipment = select_equipment(12345)
+print(equipment)
+
+update_equipment(12345, '2021-01-01', 'Service 2', '2022-01-01', 'false', 'Part 2', 'true', 2)
+
+delete_equipment(12345)
+
+# Close the database connection
+db.close()
