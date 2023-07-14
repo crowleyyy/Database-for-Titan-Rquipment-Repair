@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS Equipment (
   INDEX idx_SerialNumber (SerialNumber),
   INDEX idx_LocationID (LocationID),
   INDEX idx_NeedsParts (NeedsParts),
-  INDEX idx_LastServiceDate (LastServiceDate)
+  INDEX idx_LastServiceDate (LastServiceDate),
+  CHECK (NeedsParts IN ('true', 'false', 'part ordered')),
+  CHECK (PartsArrived IN ('true', 'false', 'N/A'))
 );
 
 -- Create Location table
