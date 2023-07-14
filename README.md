@@ -125,7 +125,6 @@ The database includes the following constraints:
 - `ck_LastServiceDone` CHECK constraint on `Equipment` table to ensure that `LastServiceDate` and `LastServiceDone` are both NULL or both NOT NULL.
 - `ck_NextPNMDate` CHECK constraint on `Equipment` table to ensure that `NextPNMDate` is not earlier than the current date.
 - `ck_ServiceDate` CHECK constraint on `ServiceHistory` table to ensure that `ServiceDate` is not later than the current date.
-- `ck_ShippingDate` CHECK constraint on `Shipping` table to ensure that `ShippingDate` is not later than the current date.
 
 ## Contributing
 
