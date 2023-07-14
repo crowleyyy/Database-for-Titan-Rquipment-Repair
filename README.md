@@ -73,6 +73,7 @@ The database includes the following views:
 - `LocationView`: A view that displays information from the `Location` table.
 - `ServiceHistoryView`: A view that displays information from the `ServiceHistory` table.
 - `ShippingView`: A view that displays information from the `Shipping` table.
+- `AdminUserView`: A view that displays information from the `Users` table and is only accessible by the admin.
 
 ## Stored Procedures
 
