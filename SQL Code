@@ -158,6 +158,61 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- Create InsertUser stored procedure
+DELIMITER $$
+CREATE PROCEDURE InsertUser(
+  IN p_Username VARCHAR(255),
+  IN p_Password VARCHAR(255),
+  IN p_Email VARCHAR(255)
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
+  INSERT INTO Users (Username, Password, Email)
+  VALUES (p_Username, p_Password, p_Email);
+END $$
+DELIMITER ;
+
+-- Create UpdateUserPassword stored procedure
+DELIMITER $$
+CREATE PROCEDURE UpdateUserPassword(
+  IN p_UserID INT,
+  IN p_NewPassword VARCHAR(255)
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
+  UPDATE Users
+  SET Password = p_NewPassword
+  WHERE UserID = p_UserID;
+END $$
+DELIMITER ;
+
+-- Create DeleteUser stored procedure
+DELIMITER $$
+CREATE PROCEDURE DeleteUser(
+  IN p_UserID INT
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- ...
+  END;
+
+  DELETE FROM Users
+  WHERE UserID = p_UserID;
+END $$
+DELIMITER ;
+
 -- Create AutoUpdateShippingStatus function
 DELIMITER $$
 CREATE FUNCTION AutoUpdateShippingStatus()
