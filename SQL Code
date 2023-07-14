@@ -55,15 +55,23 @@ CREATE TABLE IF NOT EXISTS Shipping (
   INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
 );
 
--- Create Users table
-CREATE TABLE IF NOT EXISTS Users (
-  UserID INT PRIMARY KEY AUTO_INCREMENT,
-  Username VARCHAR(255) UNIQUE,
-  Password VARCHAR(255),
-  Email VARCHAR(255),
-  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_Username (Username)
-);
+-- Create Views
+CREATE VIEW EquipmentView AS
+SELECT SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts,
+       PartName, PartsArrived, LocationID
+FROM Equipment;
+
+CREATE VIEW LocationView AS
+SELECT ID, Name, Address, PhoneNumber
+FROM Location;
+
+CREATE VIEW ServiceHistoryView AS
+SELECT ServiceID, EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes
+FROM ServiceHistory;
+
+CREATE VIEW ShippingView AS
+SELECT ShippingID, EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus
+FROM Shipping;
 
 -- Insert admin user record
 INSERT IGNORE INTO Users (UserID, Username, Password, Email)
@@ -152,61 +160,6 @@ BEGIN
 
   INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
   VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
-END $$
-DELIMITER ;
-
--- Create InsertUser stored procedure
-DELIMITER $$
-CREATE PROCEDURE InsertUser(
-  IN p_Username VARCHAR(255),
-  IN p_Password VARCHAR(255),
-  IN p_Email VARCHAR(255)
-)
-BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-
-  INSERT INTO Users (Username, Password, Email)
-  VALUES (p_Username, p_Password, p_Email);
-END $$
-DELIMITER ;
-
--- Create UpdateUserPassword stored procedure
-DELIMITER $$
-CREATE PROCEDURE UpdateUserPassword(
-  IN p_UserID INT,
-  IN p_NewPassword VARCHAR(255)
-)
-BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-
-  UPDATE Users
-  SET Password = p_NewPassword
-  WHERE UserID = p_UserID;
-END $$
-DELIMITER ;
-
--- Create DeleteUser stored procedure
-DELIMITER $$
-CREATE PROCEDURE DeleteUser(
-  IN p_UserID INT
-)
-BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-  BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
-    -- ...
-  END;
-
-  DELETE FROM Users
-  WHERE UserID = p_UserID;
 END $$
 DELIMITER ;
 
