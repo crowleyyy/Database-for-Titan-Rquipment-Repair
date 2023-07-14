@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS Equipment (
   LocationID INT,
   FOREIGN KEY (LocationID) REFERENCES Location(ID),
   INDEX idx_SerialNumber (SerialNumber),
-  INDEX idx_LocationID (LocationID)
+  INDEX idx_LocationID (LocationID),
+  INDEX idx_NeedsParts (NeedsParts),
+  INDEX idx_LastServiceDate (LastServiceDate)
 );
 
 -- Create Location table
@@ -31,7 +33,8 @@ CREATE TABLE IF NOT EXISTS ServiceHistory (
   ServiceDescription VARCHAR(255),
   ServiceNotes VARCHAR(255),
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
-  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber),
+  INDEX idx_ServiceDate (ServiceDate)
 );
 
 -- Create Shipping table
@@ -45,7 +48,8 @@ CREATE TABLE IF NOT EXISTS Shipping (
   ShippingStatus VARCHAR(255),
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
   FOREIGN KEY (ShippingFrom) REFERENCES Location(ID),
-  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber),
+  INDEX idx_ShippingStatus (ShippingStatus)
 );
 
 -- Create Users table
