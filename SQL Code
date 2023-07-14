@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS Equipment (
   FOREIGN KEY (LocationID) REFERENCES Location(ID),
   INDEX idx_SerialNumber (SerialNumber),
   INDEX idx_LocationID (LocationID),
-  INDEX idx_NeedsParts (NeedsParts),
-  INDEX idx_LastServiceDate (LastServiceDate),
-  CHECK (NeedsParts IN ('true', 'false', 'part ordered')),
-  CHECK (PartsArrived IN ('true', 'false', 'N/A'))
+  
+  -- Constraints
+  CONSTRAINT ck_LastServiceDone CHECK ((LastServiceDate IS NULL AND LastServiceDone IS NULL) OR (LastServiceDate IS NOT NULL AND LastServiceDone IS NOT NULL)),
+  CONSTRAINT ck_NextPNMDate CHECK (NextPNMDate >= CURDATE())
 );
 
 -- Create Location table
@@ -36,7 +36,9 @@ CREATE TABLE IF NOT EXISTS ServiceHistory (
   ServiceNotes VARCHAR(255),
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
   INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber),
-  INDEX idx_ServiceDate (ServiceDate)
+  
+  -- Constraints
+  CONSTRAINT ck_ServiceDate CHECK (ServiceDate <= CURDATE())
 );
 
 -- Create Shipping table
@@ -51,7 +53,9 @@ CREATE TABLE IF NOT EXISTS Shipping (
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
   FOREIGN KEY (ShippingFrom) REFERENCES Location(ID),
   INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber),
-  INDEX idx_ShippingStatus (ShippingStatus)
+  
+  -- Constraints
+  CONSTRAINT ck_ShippingDate CHECK (ShippingDate <= CURDATE())
 );
 
 -- Create Users table
