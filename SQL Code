@@ -52,10 +52,7 @@ CREATE TABLE IF NOT EXISTS Shipping (
   ShippingStatus VARCHAR(255),
   FOREIGN KEY (EquipmentSerialNumber) REFERENCES Equipment(SerialNumber),
   FOREIGN KEY (ShippingFrom) REFERENCES Location(ID),
-  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber),
-  
-  -- Constraints
-  CONSTRAINT ck_ShippingDate CHECK (ShippingDate <= CURDATE())
+  INDEX idx_EquipmentSerialNumber (EquipmentSerialNumber)
 );
 
 -- Create Users table
