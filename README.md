@@ -56,6 +56,15 @@ The database consists of the following tables:
   - `TrackingNumber`
   - `ShippingStatus`
 
+### Users Table
+
+- `Users` table:
+  - `UserID` (Primary Key)
+  - `Username` (Unique)
+  - `Password`
+  - `Email`
+  - `CreatedAt`
+
 ## Stored Procedures
 
 The database includes the following stored procedures for inserting data into the respective tables:
@@ -80,13 +89,13 @@ This stored procedure allows you to insert shipping information into the `Shippi
 
 This stored procedure allows you to insert user information into the `Users` table.
 
-### GetEquipmentByID
+### UpdateUserPassword
 
-This stored procedure retrieves equipment information by the provided `SerialNumber`.
+This stored procedure allows you to update the password of a user in the `Users` table.
 
-### GetServiceHistoryBySerialNumber
+### DeleteUser
 
-This stored procedure retrieves service history information by the provided `SerialNumber`.
+This stored procedure allows you to delete a user from the `Users` table.
 
 ## Triggers
 
@@ -94,19 +103,20 @@ The database includes the following triggers:
 
 ### UpdateShippingStatus
 
-This trigger adds a trigger called "UpdateShippingStatus" that automatically updates the `ShippingStatus` in the `Shipping` table when the `PartsArrived` value in the `Equipment` table is set to 'true'. The trigger calls the "AutoUpdateShippingStatus" function, which performs the update operation.
+This trigger adds a trigger called "UpdateShippingStatus" that automatically updates the `PartsArrived` column in the `Equipment` table when the `ShippingStatus` value in the `Shipping` table changes.
 
 ### UpdateEquipmentStatus
 
-This trigger adds a trigger called "UpdateEquipmentStatus" that automatically updates the `PartsArrived` column in the `Equipment` table when the `ShippingStatus` value in the `Shipping` table changes. The trigger calls the "AutoUpdateEquipmentStatus" function, which performs the update operation.
+This trigger adds a trigger called "UpdateEquipmentStatus" that automatically updates the `PartsArrived` column in the `Equipment` table when the `ShippingStatus` value in the `Shipping` table changes.
 
-## Error Handling
+## Constraints
 
-The stored procedures in the database include error handling to ensure proper handling of exceptions that may occur during data insertion. By using the `DECLARE EXIT HANDLER FOR SQLEXCEPTION` statement, the procedures are equipped to handle any SQL exceptions that might arise.
+The database includes the following constraints:
 
-In case of an exception, the error handling section within each stored procedure allows for customized actions to be taken. Some common error handling practices include logging the error, rolling back the transaction, and displaying an error message to the user. You can customize the error handling section as per your specific requirements.
-
-The error handling mechanism ensures that the database maintains data consistency and integrity, even in the event of unexpected errors during data insertion.
+- `ck_LastServiceDone` CHECK constraint on `Equipment` table to ensure that `LastServiceDate` and `LastServiceDone` are both NULL or both NOT NULL.
+- `ck_NextPNMDate` CHECK constraint on `Equipment` table to ensure that `NextPNMDate` is not earlier than the current date.
+- `ck_ServiceDate` CHECK constraint on `ServiceHistory` table to ensure that `ServiceDate` is not later than the current date.
+- `ck_ShippingDate` CHECK constraint on `Shipping` table to ensure that `ShippingDate` is not later than the current date.
 
 ## Contributing
 
