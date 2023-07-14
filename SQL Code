@@ -77,6 +77,11 @@ CREATE VIEW ShippingView AS
 SELECT ShippingID, EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus
 FROM Shipping;
 
+CREATE VIEW AdminUsersView AS
+SELECT UserID, Username, Email
+FROM Users
+WHERE Username = 'admin';
+
 -- Insert admin user record
 INSERT IGNORE INTO Users (UserID, Username, Password, Email)
 VALUES (1, 'admin', 'admin_password', 'admin@example.com');
