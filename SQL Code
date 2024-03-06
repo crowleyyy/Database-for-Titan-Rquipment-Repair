@@ -1,4 +1,12 @@
--- Create Equipment table
+-- Create ErrorLog table for logging errors
+CREATE TABLE IF NOT EXISTS ErrorLog (
+  LogID INT PRIMARY KEY AUTO_INCREMENT,
+  Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  ErrorMessage VARCHAR(255),
+  ProcedureName VARCHAR(255)
+);
+
+-- Create Equipment table with version number for concurrency control
 CREATE TABLE IF NOT EXISTS Equipment (
   SerialNumber INT PRIMARY KEY,
   LastServiceDate DATE,
@@ -8,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Equipment (
   PartName VARCHAR(255) DEFAULT NULL,
   PartsArrived ENUM('true', 'false', 'N/A'),
   LocationID INT,
+  Version INT DEFAULT 0, -- Added version column
   FOREIGN KEY (LocationID) REFERENCES Location(ID),
   INDEX idx_SerialNumber (SerialNumber),
   INDEX idx_LocationID (LocationID),
@@ -101,12 +110,19 @@ CREATE PROCEDURE InsertEquipment(
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- Log error
+    INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+    VALUES (CONCAT('Error in InsertEquipment: ', SQLERRM()), 'InsertEquipment');
+    -- Handle exception (e.g., rollback transaction, display error message)
     -- ...
   END;
 
   INSERT INTO Equipment (SerialNumber, LastServiceDate, LastServiceDone, NextPNMDate, NeedsParts, PartName, PartsArrived, LocationID)
   VALUES (p_SerialNumber, p_LastServiceDate, p_LastServiceDone, p_NextPNMDate, p_NeedsParts, p_PartName, p_PartsArrived, p_LocationID);
+  
+  -- Log successful operation
+  INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+  VALUES ('InsertEquipment operation successful', 'InsertEquipment');
 END $$
 DELIMITER ;
 
@@ -120,12 +136,19 @@ CREATE PROCEDURE InsertLocation(
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- Log error
+    INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+    VALUES (CONCAT('Error in InsertLocation: ', SQLERRM()), 'InsertLocation');
+    -- Handle exception (e.g., rollback transaction, display error message)
     -- ...
   END;
 
   INSERT INTO Location (Name, Address, PhoneNumber)
   VALUES (p_Name, p_Address, p_PhoneNumber);
+  
+  -- Log successful operation
+  INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+  VALUES ('InsertLocation operation successful', 'InsertLocation');
 END $$
 DELIMITER ;
 
@@ -141,12 +164,19 @@ CREATE PROCEDURE InsertServiceHistory(
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- Log error
+    INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+    VALUES (CONCAT('Error in InsertServiceHistory: ', SQLERRM()), 'InsertServiceHistory');
+    -- Handle exception (e.g., rollback transaction, display error message)
     -- ...
   END;
 
   INSERT INTO ServiceHistory (EquipmentSerialNumber, ServiceDate, ServiceType, ServiceDescription, ServiceNotes)
   VALUES (p_EquipmentSerialNumber, p_ServiceDate, p_ServiceType, p_ServiceDescription, p_ServiceNotes);
+  
+  -- Log successful operation
+  INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+  VALUES ('InsertServiceHistory operation successful', 'InsertServiceHistory');
 END $$
 DELIMITER ;
 
@@ -163,12 +193,19 @@ CREATE PROCEDURE InsertShipping(
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    -- Handle exception (e.g., log error, rollback transaction, display error message)
+    -- Log error
+    INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+    VALUES (CONCAT('Error in InsertShipping: ', SQLERRM()), 'InsertShipping');
+    -- Handle exception (e.g., rollback transaction, display error message)
     -- ...
   END;
 
   INSERT INTO Shipping (EquipmentSerialNumber, ShippingDate, ShippingFrom, ShippingMethod, TrackingNumber, ShippingStatus)
   VALUES (p_EquipmentSerialNumber, p_ShippingDate, p_ShippingFrom, p_ShippingMethod, p_TrackingNumber, p_ShippingStatus);
+  
+  -- Log successful operation
+  INSERT INTO ErrorLog (ErrorMessage, ProcedureName)
+  VALUES ('InsertShipping operation successful', 'InsertShipping');
 END $$
 DELIMITER ;
 
